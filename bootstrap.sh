@@ -139,6 +139,13 @@ fi
 
 if [ ! -f .stamp_built2 ]; then
   sed -i -e 's/.PHONY: $(PHONY)/.PHONY: build $(PHONY)/' ct-ng
+  # kernel.org removed v3.x and v4.x directories; pre-download from git.kernel.org
+  _LINUX_VERSION=$(grep "^CT_LINUX_VERSION=" "${SOURCE_DIR}/toolchain/${TOOLCHAIN_PLATFORM}.config" | cut -d'"' -f2)
+  _LINUX_MAJOR=$(echo ${_LINUX_VERSION} | cut -d'.' -f1)
+  if [ "${_LINUX_MAJOR}" -lt 5 ] && [ ! -f "${DOWNLOAD_DIR}/linux-${_LINUX_VERSION}.tar.gz" ]; then
+    wget "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/snapshot/linux-${_LINUX_VERSION}.tar.gz" \
+         -O "${DOWNLOAD_DIR}/linux-${_LINUX_VERSION}.tar.gz"
+  fi
   ./ct-ng build
   touch .stamp_built2
 fi
