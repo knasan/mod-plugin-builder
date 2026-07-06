@@ -8,6 +8,9 @@ ARG platform=moddwarf-new
 # optional argument for specifying build target
 ARG target=full
 
+# mod-plugin-builder settings
+ARG MPB_GIT_URL=https://github.com/mod-audio/mod-plugin-builder
+
 # enable i386, armhf and arm64
 RUN dpkg --add-architecture i386
 RUN dpkg --add-architecture armhf
@@ -65,8 +68,7 @@ RUN if test "$platform" = "modduo" || test "$platform" = "modduo-new" || test "$
         ~/.cargo/bin/rustup target add x86_64-unknown-linux-gnu --toolchain nightly; \
     fi
 
-# mod-plugin-builder settings
-ENV MPB_GIT_URL https://github.com/mod-audio/mod-plugin-builder
+ENV MPB_GIT_URL=${MPB_GIT_URL}
 
 # ct-ng settings
 ENV CT_ALLOW_BUILD_AS_ROOT_SURE y
@@ -87,3 +89,4 @@ RUN ./bootstrap.sh $platform $target && ./.clean-install.sh $platform
 
 # CMD
 CMD ["bash"]
+
