@@ -1,0 +1,29 @@
+--- a/gio/gdbus-2.0/codegen/utils.py
++++ b/gio/gdbus-2.0/codegen/utils.py
+@@ -19,7 +19,19 @@
+ #
+ # Author: David Zeuthen <davidz@redhat.com>
+ 
+-import distutils.version
++def _parse_version(s):
++    parts = []
++    for part in s.replace('-', '.').split('.'):
++        num = ''
++        for c in part:
++            if c.isdigit():
++                num += c
++            else:
++                break
++        if num:
++            parts.append(int(num))
++    return tuple(parts)
++
+ 
+ def strip_dots(s):
+     ret = ''
+@@ -99,4 +111,4 @@
+     # If the 'since' version is empty put a 0 in its place as this will
+     # allow LooseVersion to work and will always compare lower.
+     v = key[0] if key[0] else '0'
+-    return (distutils.version.LooseVersion(v), key[1])
++    return (_parse_version(v), key[1])
